@@ -48,5 +48,6 @@ jobs:
         POSTGRES_SERVER: localhost
         REDIS_HOST: localhost
         PYTHONPATH: .
+        CACHE_BUSTER: ${{ github.run_id }}
       run: |
         pytest tests/ -v
