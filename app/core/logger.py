@@ -4,7 +4,6 @@ from typing import Any
 
 import structlog
 from asgi_correlation_id import correlation_id
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 
 def configure_logging() -> None:

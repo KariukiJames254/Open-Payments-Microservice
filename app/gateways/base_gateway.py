@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, TypeVar
 
-
 # Define a TypeVar for the payload and response types
 # This allows subclasses to specify more concrete types if needed
 PayloadType = TypeVar('PayloadType', bound=Dict[str, Any])
