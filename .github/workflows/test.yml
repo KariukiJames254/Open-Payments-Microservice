@@ -47,5 +47,6 @@ jobs:
       env:
         POSTGRES_SERVER: localhost
         REDIS_HOST: localhost
+        PYTHONPATH: .
       run: |
         pytest tests/ -v
