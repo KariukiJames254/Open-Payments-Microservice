@@ -1,6 +1,8 @@
 from arq.connections import RedisSettings
+
 from app.core.config import settings
 from app.services.tasks import process_payment_async
+
 
 async def startup(ctx):
     """
@@ -9,14 +11,17 @@ async def startup(ctx):
     """
     print("ARQ Worker starting up...")
 
+
 async def shutdown(ctx):
     print("ARQ Worker shutting down...")
+
 
 class WorkerSettings:
     """
     Configuration for the ARQ worker.
     Start via: `arq app.worker.WorkerSettings`
     """
+
     functions = [process_payment_async]
     redis_settings = RedisSettings.from_dsn(settings.REDIS_URL)
     on_startup = startup

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
+
 class PaymentGateway(ABC):
     """
     Base interface for payment gateways.
@@ -8,7 +9,9 @@ class PaymentGateway(ABC):
     """
 
     @abstractmethod
-    async def initiate_payment(self, transaction_id: str, amount: float, currency: str, phone: str) -> Dict[str, Any]:
+    async def initiate_payment(
+        self, transaction_id: str, amount: float, currency: str, phone: str
+    ) -> Dict[str, Any]:
         """
         Initiates a payment request to the external provider.
         """

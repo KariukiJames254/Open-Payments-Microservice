@@ -1,8 +1,8 @@
 import logging
-import asyncio
-from typing import Dict, Any
+from typing import Any, Dict
 
 logger = logging.getLogger("arq.worker")
+
 
 async def process_payment_async(ctx: Dict[Any, Any], transaction_id: str) -> None:
     """
@@ -12,11 +12,11 @@ async def process_payment_async(ctx: Dict[Any, Any], transaction_id: str) -> Non
     """
     # Import locally to avoid circular dependencies and only hit DB in worker context
     from app.core.database import async_session
-    from app.services.payment_service import PaymentService
     from app.gateways.mpesa_gateway import MpesaGateway
-    
+    from app.services.payment_service import PaymentService
+
     logger.info(f"Starting async processing for transaction {transaction_id}")
-    
+
     async with async_session() as db:
         gateway = MpesaGateway()
         service = PaymentService(db, gateway)
