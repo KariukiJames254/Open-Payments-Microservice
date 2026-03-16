@@ -41,7 +41,6 @@ class Settings(BaseSettings):
     MPESA_ENV: str = os.getenv("MPESA_ENV", "sandbox")  # sandbox or production
 
 
-
 settings = Settings()
 
 # End of file

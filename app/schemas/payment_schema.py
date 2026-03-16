@@ -28,7 +28,6 @@ class PaymentResponse(BaseModel):
     updated_at: datetime
 
 
-
 class PaymentStatusUpdate(BaseModel):
     status: PaymentStatus
     gateway_response: Optional[dict] = None
