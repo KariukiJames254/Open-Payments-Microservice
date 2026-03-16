@@ -1,6 +1,6 @@
 import pytest
 import pytest_asyncio
-from httpx import AsyncClient
+from httpx import ASGITransport, AsyncClient
 import uuid
 from unittest.mock import AsyncMock
 
@@ -47,7 +47,7 @@ app.dependency_overrides[verify_api_key] = override_api_key
 
 @pytest.mark.asyncio
 async def test_create_payment():
-    async with AsyncClient(app=app, base_url="http://test") as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/payments", 
             json={
@@ -65,7 +65,7 @@ async def test_create_payment():
 
 @pytest.mark.asyncio
 async def test_get_payment_not_found():
-    async with AsyncClient(app=app, base_url="http://test") as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get(
             f"/payments/fake-transaction-id",
             headers={"X-API-Key": "sk_test_123456789"}

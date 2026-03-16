@@ -1,6 +1,7 @@
 import os
 from typing import Optional
 
+from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
 
 
@@ -37,9 +38,7 @@ class Settings(BaseSettings):
     MPESA_PASSKEY: Optional[str] = os.getenv("MPESA_PASSKEY")
     MPESA_ENV: str = os.getenv("MPESA_ENV", "sandbox")  # sandbox or production
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = ConfigDict(env_file=".env", case_sensitive=True)
 
 
 settings = Settings()
