@@ -33,7 +33,7 @@ class MpesaGateway(PaymentGateway):
         # Simulate a successful payment status check
         return {"status": "success", "receipt_number": "R_" + transaction_id[:8].upper()}
 
-    async def handle_callback(self, payload: dict) -> Dict[str, Any]:
+    async def handle_callback(self, payload: dict[str, Any]) -> dict[str, Any]:
         # In M-Pesa, this unwraps the Body.stkCallback
         body = payload.get("Body", {}).get("stkCallback", {})
         result_code = body.get("ResultCode", -1)

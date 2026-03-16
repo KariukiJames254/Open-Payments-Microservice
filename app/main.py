@@ -1,5 +1,6 @@
 import logging
 from contextlib import asynccontextmanager
+from typing import Any, AsyncGenerator
 
 import structlog
 from asgi_correlation_id import CorrelationIdMiddleware
@@ -20,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncGenerator[Any, None]:
     # Database tables are now managed by Alembic migrations
     configure_logging()
     logger = structlog.get_logger()
@@ -56,7 +57,7 @@ app.include_router(webhooks_router)
 
 
 @app.get("/health", tags=["Health"])
-async def health_check():
+async def health_check() -> dict[str, str]:
     return {"status": "ok", "app": settings.PROJECT_NAME}
 
 

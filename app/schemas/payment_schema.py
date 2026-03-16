@@ -1,14 +1,15 @@
 from datetime import datetime
-from typing import Optional
+from decimal import Decimal
+from typing import Annotated, Any, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, condecimal
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.payment import PaymentStatus
 
 
 class PaymentCreate(BaseModel):
-    amount: condecimal(gt=0, max_digits=10, decimal_places=2) = Field(
+    amount: Annotated[Decimal, Field(gt=0, max_digits=10, decimal_places=2)] = Field(
         ..., json_schema_extra={"example": 1500}
     )
     currency: str = Field(default="KES", max_length=3, json_schema_extra={"example": "KES"})
@@ -20,7 +21,7 @@ class PaymentResponse(BaseModel):
 
     id: UUID
     transaction_id: str
-    amount: condecimal(max_digits=10, decimal_places=2)
+    amount: Annotated[Decimal, Field(max_digits=10, decimal_places=2)]
     currency: str
     customer_phone: str
     status: PaymentStatus
@@ -30,4 +31,4 @@ class PaymentResponse(BaseModel):
 
 class PaymentStatusUpdate(BaseModel):
     status: PaymentStatus
-    gateway_response: Optional[dict] = None
+    gateway_response: Optional[dict[str, Any]] = None

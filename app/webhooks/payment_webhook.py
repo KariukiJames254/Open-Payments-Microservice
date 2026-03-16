@@ -19,12 +19,12 @@ def get_payment_service(db: AsyncSession = Depends(get_db)) -> PaymentService:
 
 
 @router.post("/payment")
-@limiter.limit("60/minute")
+@limiter.limit("60/minute")  # type: ignore[untyped-decorator]
 async def payment_webhook(
     request: Request,
     signature: Optional[str] = Header(None, alias="X-Signature"),
     service: PaymentService = Depends(get_payment_service),
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Receives callbacks from payment gateways and updates payment status.
     """
@@ -35,7 +35,7 @@ async def payment_webhook(
         raise HTTPException(status_code=400, detail="Request body is empty")
 
     # 2. Verify signature BEFORE parsing (security first)
-    if not verify_webhook_signature(body_bytes, signature):
+    if signature is None or not verify_webhook_signature(body_bytes, signature):
         raise HTTPException(status_code=401, detail="Invalid Webhook Signature")
 
     # 3. Parse JSON safely

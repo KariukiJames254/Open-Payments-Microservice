@@ -2,6 +2,7 @@ import enum
 import uuid
 from datetime import datetime
 from decimal import Decimal
+from typing import Any
 
 from sqlalchemy import JSON, DateTime, Enum, ForeignKey, Numeric, String
 from sqlalchemy.dialects.postgresql import UUID
@@ -16,7 +17,7 @@ class PaymentStatus(str, enum.Enum):
     FAILED = "failed"
 
 
-class Payment(Base):
+class Payment(Base):  # type: ignore[misc]
     __tablename__ = "payments"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -35,14 +36,14 @@ class Payment(Base):
     logs = relationship("PaymentLog", back_populates="payment", cascade="all, delete-orphan")
 
 
-class PaymentLog(Base):
+class PaymentLog(Base):  # type: ignore[misc]
     __tablename__ = "payment_logs"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     payment_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("payments.id"), nullable=False
     )
-    gateway_response: Mapped[dict] = mapped_column(JSON, nullable=True)
+    gateway_response: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     payment = relationship("Payment", back_populates="logs")

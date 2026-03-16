@@ -1,10 +1,11 @@
 from arq.connections import RedisSettings
+from typing import Any
 
 from app.core.config import settings
 from app.services.tasks import process_payment_async
 
 
-async def startup(ctx):
+async def startup(ctx: Any) -> None:
     """
     Called when the ARQ worker starts.
     Good place to setup DB connection pools if they aren't created lazily.
@@ -12,7 +13,7 @@ async def startup(ctx):
     print("ARQ Worker starting up...")
 
 
-async def shutdown(ctx):
+async def shutdown(ctx: Any) -> None:
     print("ARQ Worker shutting down...")
 
 

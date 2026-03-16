@@ -1,14 +1,19 @@
+```python
 import logging
 import sys
+from typing import Any
 
 import structlog
 from asgi_correlation_id import correlation_id
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 
-def configure_logging():
+def configure_logging() -> None:
     """Configure structured JSON logging across the application."""
 
-    def add_correlation_id(logger, method_name, event_dict):
+    def add_correlation_id(
+        logger: Any, method_name: str, event_dict: dict[str, Any]
+    ) -> dict[str, Any]:
         """Add the correlation ID to every log entry representing an HTTP request footprint."""
         request_id = correlation_id.get()
         if request_id:

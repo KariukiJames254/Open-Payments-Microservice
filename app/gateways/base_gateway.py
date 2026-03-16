@@ -1,5 +1,12 @@
+```python
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any, Dict, TypeVar
+
+
+# Define a TypeVar for the payload and response types
+# This allows subclasses to specify more concrete types if needed
+PayloadType = TypeVar('PayloadType', bound=Dict[str, Any])
+ResponseType = TypeVar('ResponseType', bound=Dict[str, Any])
 
 
 class PaymentGateway(ABC):
@@ -25,7 +32,7 @@ class PaymentGateway(ABC):
         pass
 
     @abstractmethod
-    async def handle_callback(self, payload: dict) -> Dict[str, Any]:
+    async def handle_callback(self, payload: dict[str, Any]) -> dict[str, Any]:
         """
         Parses the provider's webhook payload and returns normalized status / identifiers.
         """

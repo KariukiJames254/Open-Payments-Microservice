@@ -1,5 +1,6 @@
 import logging
 import uuid
+from typing import Any, Optional
 
 import redis.asyncio as redis
 from fastapi import HTTPException
@@ -21,7 +22,7 @@ class PaymentService:
         self.gateway = gateway
 
     async def create_payment(
-        self, payment_data: PaymentCreate, idempotency_key: str = None
+        self, payment_data: PaymentCreate, idempotency_key: Optional[str] = None
     ) -> Payment:
         # Check idempotency
         if idempotency_key:
@@ -91,7 +92,7 @@ class PaymentService:
             logger.error(f"Error initiating payment: {str(e)}")
             raise HTTPException(status_code=502, detail="Payment gateway error") from e
 
-    async def process_webhook(self, payload: dict) -> Payment:
+    async def process_webhook(self, payload: dict[str, Any]) -> Payment:
         """
         Processes an incoming webhook from the payment provider.
         Assumes payload contains the transaction_id for mapping.

@@ -1,4 +1,5 @@
-from typing import Optional
+```python
+from typing import Any, Optional, AsyncGenerator
 
 from fastapi import APIRouter, Depends, Header, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -19,14 +20,14 @@ def get_payment_service(db: AsyncSession = Depends(get_db)) -> PaymentService:
 
 
 @router.post("", response_model=PaymentResponse, status_code=status.HTTP_201_CREATED)
-@limiter.limit("5/minute")
+@limiter.limit("5/minute")  # type: ignore[untyped-decorator]
 async def create_payment(
     request: Request,
     payment_in: PaymentCreate,
     idempotency_key: Optional[str] = Header(None, alias="Idempotency-Key"),
     service: PaymentService = Depends(get_payment_service),
     api_key: str = Depends(verify_api_key),
-):
+) -> PaymentResponse:
     """
     Creates a new payment record and returns the transaction ID.
     Supports idempotency via the `Idempotency-Key` header.
@@ -36,13 +37,13 @@ async def create_payment(
 
 
 @router.get("/{transaction_id}", response_model=PaymentResponse)
-@limiter.limit("20/minute")
+@limiter.limit("20/minute")  # type: ignore[untyped-decorator]
 async def get_payment(
     request: Request,
     transaction_id: str,
     service: PaymentService = Depends(get_payment_service),
     api_key: str = Depends(verify_api_key),
-):
+) -> PaymentResponse:
     """
     Retrieves the status and details of a specific payment transaction.
     """
@@ -51,7 +52,7 @@ async def get_payment(
 
 
 @router.post("/{transaction_id}/pay", response_model=PaymentResponse)
-@limiter.limit("5/minute")
+@limiter.limit("5/minute")  # type: ignore[untyped-decorator]
 async def initiate_payment(
     request: Request,
     transaction_id: str,
