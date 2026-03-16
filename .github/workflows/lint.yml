@@ -18,4 +18,4 @@ jobs:
       - name: Format Check with Ruff
         run: ruff format --check app/
       - name: Type Check with Mypy
-        run: mypy app --explicit-package-bases
+        run: mypy app
