@@ -16,6 +16,8 @@ class PaymentCreate(BaseModel):
 
 
 class PaymentResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     transaction_id: str
     amount: condecimal(max_digits=10, decimal_places=2)
@@ -25,7 +27,6 @@ class PaymentResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
 
 
 class PaymentStatusUpdate(BaseModel):

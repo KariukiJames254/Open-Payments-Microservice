@@ -6,6 +6,8 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    model_config = ConfigDict(env_file=".env", case_sensitive=True)
+
     PROJECT_NAME: str = "Open Payments Microservice"
 
     # Database Settings
@@ -38,7 +40,6 @@ class Settings(BaseSettings):
     MPESA_PASSKEY: Optional[str] = os.getenv("MPESA_PASSKEY")
     MPESA_ENV: str = os.getenv("MPESA_ENV", "sandbox")  # sandbox or production
 
-    model_config = ConfigDict(env_file=".env", case_sensitive=True)
 
 
 settings = Settings()
