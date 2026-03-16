@@ -1,5 +1,4 @@
-```python
-from typing import Any, Optional, AsyncGenerator
+from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, Header, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,7 +26,7 @@ async def create_payment(
     idempotency_key: Optional[str] = Header(None, alias="Idempotency-Key"),
     service: PaymentService = Depends(get_payment_service),
     api_key: str = Depends(verify_api_key),
-) -> PaymentResponse:
+) -> Any:
     """
     Creates a new payment record and returns the transaction ID.
     Supports idempotency via the `Idempotency-Key` header.
@@ -43,7 +42,7 @@ async def get_payment(
     transaction_id: str,
     service: PaymentService = Depends(get_payment_service),
     api_key: str = Depends(verify_api_key),
-) -> PaymentResponse:
+) -> Any:
     """
     Retrieves the status and details of a specific payment transaction.
     """
@@ -58,7 +57,7 @@ async def initiate_payment(
     transaction_id: str,
     service: PaymentService = Depends(get_payment_service),
     api_key: str = Depends(verify_api_key),
-):
+) -> Any:
     """
     Triggers a payment request (e.g. STK Push) via the configured Gateway adapter.
     """
