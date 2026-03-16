@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, Request, HTTPException, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Dict, Any, Optional
+import json
+import logging
 
 from app.services.payment_service import PaymentService
 from app.gateways.mpesa_gateway import MpesaGateway
@@ -28,15 +30,23 @@ async def payment_webhook(
     """
     Receives callbacks from payment gateways and updates payment status.
     """
-    raw_payload = await request.body()
+    # 1. Read the raw body
+    body_bytes = await request.body()
     
-    if not verify_webhook_signature(raw_payload, signature):
-        raise HTTPException(status_code=400, detail="Invalid Webhook Signature")
+    if not body_bytes:
+        raise HTTPException(status_code=400, detail="Request body is empty")
 
-    import json
-    payload = json.loads(raw_payload.decode("utf-8"))
-    
-    # Process webhook using the service layer
+    # 2. Verify signature BEFORE parsing (security first)
+    if not verify_webhook_signature(body_bytes, signature):
+        raise HTTPException(status_code=401, detail="Invalid Webhook Signature")
+
+    # 3. Parse JSON safely
+    try:
+        payload = json.loads(body_bytes.decode("utf-8"))
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
+
+    # 4. Process webhook
     await service.process_webhook(payload)
     
     return {"status": "received"}
